@@ -238,13 +238,18 @@ az vm run-command invoke \
   --command-id RunShellScript \
   --scripts "
 #!/bin/bash
-while true; do
-  curl http://$PE_PRIVATE_IP:80
-  sleep 5
-done
+echo 'Starting curl loop in background'
+
+# Create a directory for logs if it doesn't exist
+sudo mkdir -p /var/log/curl_loop
+
+# Run the curl loop using nohup and redirect output to a log file
+nohup bash -c 'while true; do curl http://$PE_PRIVATE_IP:80; sleep 5; done' > /var/log/curl_loop/curl_loop.log 2>&1 &
+
+echo 'Curl loop has been started in the background.'
 "
 
-echo -e "\e[31mStart to create bastion public IP and Bastion \e[0m"
+echo -e "\e[31mStart to create bastion public IP  \e[0m"
 # Create a public IP address
 az network public-ip create \
   --resource-group $RESOURCE_GROUP \
@@ -252,6 +257,7 @@ az network public-ip create \
   --allocation-method Static \
   --sku Standard
 
+echo -e "\e[31mStart to create  Bastion \e[0m"
 # https://learn.microsoft.com/en-us/cli/azure/network/bastion?view=azure-cli-latest#az-network-bastion-create
 # Create Azure Bastion
 az network bastion create \
@@ -259,10 +265,11 @@ az network bastion create \
   --resource-group $RESOURCE_GROUP \
   --vnet-name $VNET_CLIENT_NAME \
   --public-ip-address $PUBLIC_IP_BASTION_NAME \
-  --sku Basic \ 
-  --location $LOCATION
+  --sku Basic 
 
 
 echo -e "\e[31mDeployment completed. \e[0m"
 echo -e "\e[31mDestination private ip: $PE_PRIVATE_IP \e[0m"
+
+
 
