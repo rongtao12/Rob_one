@@ -18,7 +18,7 @@ Install-RemoteAccess -VpnType RoutingOnly
 Add-BgpRouter -BgpIdentifier $local_ip -LocalASN $SG_BGP
 
 # Configure Azure Route Server as a BGP Peer
-Add-BgpPeer -LocalIPAddress $local_ip -PeerIPAddress $local_bgp -PeerASN 65515 -Name 'RS_IP1'
+Add-BgpPeer -LocalIPAddress $local_ip -PeerIPAddress $peer_2 -PeerASN 65515 -Name 'RS_IP1'
 Add-BgpPeer -LocalIPAddress $local_ip -PeerIPAddress $peer_2 -PeerASN 65515 -Name 'RS_IP2'
 
 # Originate and announce BGP routes
