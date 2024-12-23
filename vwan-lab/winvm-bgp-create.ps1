@@ -12,7 +12,7 @@ Install-WindowsFeature Routing
 Install-RemoteAccess -VpnType RoutingOnly
 
 # Import the custom BGP configuration module
-Import-Module -Name BGPConfigModule
+#Import-Module -Name BGPConfigModule
 
 # Configure BGP & Router ID on the Windows Server
 Add-BgpRouter -BgpIdentifier $local_ip -LocalASN $SG_BGP
